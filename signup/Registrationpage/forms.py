@@ -46,6 +46,14 @@ class SignupForm(forms.ModelForm):
             }
 
         }
+class siginform(forms.ModelForm):
+    class Meta:
+        model=Register
+        fields=['Email','Password']
+        labels={
+            'Email':"Enter your Registered Email",
+            'Password':"Enter your Password"
+        }
         
 
 

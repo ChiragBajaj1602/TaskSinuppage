@@ -11,3 +11,5 @@ class Register(models.Model):
     Address1=models.CharField(max_length=500)
     state=models.CharField(max_length=30)
     Password=models.CharField(validators=[MinLengthValidator(8)],max_length=20)
+    def __str__(self):
+        return f'{self.Fname} {self.Lname} with email {self.Email}'
