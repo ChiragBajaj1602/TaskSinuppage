@@ -17,7 +17,7 @@ class SignupForm(forms.ModelForm):
         }
         error_messages={
             "Fname":{
-                "required":"The First Name cannot be empty",
+                'required':"The First Name cannot be empty",
                 "max_length":"The First name can't be greater than 50 characters"
             },
             "Lname":{
@@ -31,8 +31,6 @@ class SignupForm(forms.ModelForm):
             "Phone_number":{
                 "required":"The Phoe Number cannot be empty",
                 "min_value":"The phone Numbers in India start from 6"
-
-
             },
             "Address1":{
                 "required":"The Address cannot be empty",

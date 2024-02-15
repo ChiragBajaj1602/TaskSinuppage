@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}
 The Signup page
 {% endblock %}
+{% block cssfiles %}
+<link rel="stylesheet" href="{% static 'Registrationpage/style.css' %}">
+{% endblock  %}
 {% block content %}
 <form action="/registrationpage" method="POST">
 {% csrf_token %}
