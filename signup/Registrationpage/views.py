@@ -35,7 +35,7 @@ class login(View):
             # We have fetched the email we will check the db 
             # that if it exists or not
             try:
-                user1=Register.objects.get(Email=email)
+                user1=Register.objects.filter(Email=email).first()
             except Register.DoesNotExist:
                 print("Invalid email")
                 return HttpResponseRedirect('login')
