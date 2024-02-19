@@ -7,15 +7,22 @@ Login Page
 <link rel="stylesheet" href="{% static 'Registrationpage/style.css' %}">
 {% endblock  %}
 {% block content%}
-<form action="login" method="POST">
+<form method="POST">
     {% csrf_token %}
     {% for field in form%}
     <div class="form-control {% if field.errors %}errors{% endif %}">
         {{field.label_tag}}
         {{field}}
-        {{field.errors}}
+        {% if field.errors %}
+            <ul>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
     {% endfor %}
     <button>Submit</button>
 </form>
+
 {% endblock %}

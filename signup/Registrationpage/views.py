@@ -3,6 +3,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.views import View
 from .forms import SignupForm,siginform
 from .models import Register
+from django.contrib import messages
+import re
 # Create your views here.
 class homePage(View):
     def get(self,request):
@@ -13,10 +15,12 @@ class homePage(View):
     def post(self,request):
         form=SignupForm(request.POST)
         if form.is_valid():
+            print("The registration page is validated")
             form.save()
             return HttpResponseRedirect('login')
         else:
             form=SignupForm()
+            print("The registrtaion page is invalid in the post view of signup page")
         return render(request,'Registrationpage/index.html',{
             'form':form
         })
@@ -28,24 +32,14 @@ class login(View):
             'form':form
         })
     def post(self,request):
+        print("In the post view")
         form = siginform(request.POST)
         if form.is_valid():
-            email=form.cleaned_data['Email']
-            password=form.cleaned_data['Password']
-            # We have fetched the email we will check the db 
-            # that if it exists or not
-            try:
-                user1=Register.objects.filter(Email=email).first()
-            except Register.DoesNotExist:
-                print("Invalid email")
-                return HttpResponseRedirect('login')
-            if user1.Password == password:
-                return HttpResponse("<h1>The Login is Successful</h1>")
-            else:
-                return HttpResponseRedirect('login')
+            print("The login page is valid")
+            return HttpResponse("<h1>Login is Success</h1>")
         else:
             form = siginform()
-            return render(request,'Registrationpage/login.html',{
-                'form':form
-            })
+        return render(request,'Registrationpage/login.html',{
+            'form':form
+        })
 

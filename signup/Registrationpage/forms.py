@@ -1,7 +1,22 @@
 from django import forms
 from .models import Register
+import re
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
+from .models import Register
+def validate_password(password):
+    pattern=r'^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$'
+    print('in the validate password  function')
+    return bool(re.match(pattern,password))
+def validatephone(phonenumber):
+    pattern = r'^\d{10}$'
+    return bool(re.match(pattern,phonenumber))
+def validateEmail(email):
+    try:
+        dbemail= Register.objects.get(Email=email)
+    except:
+        return True
 class SignupForm(forms.ModelForm):
     class Meta:
         model=Register
@@ -15,37 +30,20 @@ class SignupForm(forms.ModelForm):
             'state':"Enter the name of your State",
             'Password':"Create a Strong Password"
         }
-        error_messages={
-            "Fname":{
-                'required':"The First Name cannot be empty",
-                "max_length":"The First name can't be greater than 50 characters"
-            },
-            "Lname":{
-                "required":"The Last Name cannot be empty",
-                "max_length":"The Last name can't be greater than 50 characters"
-            },
-            "Email":{
-                "required":"The Email cannot be empty",
-                "max_length":"The Email can't be greater than 254 characters"
-            },
-            "Phone_number":{
-                "required":"The Phoe Number cannot be empty",
-                "min_value":"The phone Numbers in India start from 6"
-            },
-            "Address1":{
-                "required":"The Address cannot be empty",
-                "max_length":"The Address cannot be greater than 500 characters"
-            },
-            "state":{
-                "required":"The state name cannot be empty",
-                "max_length":"The state name can't be greater than 30 characters"
-            },
-            "Password":{
-                "required":"You have to create a Password",
-                "min_length":"the Password should be atleast 8 characters long"
-            }
-
-        }
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get('Phone_number')
+        email=cleaned_data.get('Email')
+        if not validateEmail(email):
+            raise forms.ValidationError({'Email':"The Email already exists"})
+        if not validatephone(phone_number):
+            raise forms.ValidationError({'Phone_Number':"The Phone number must be 10 characters long and there must be no characters"})
+        password=cleaned_data.get('Password')
+        if not validate_password(password):
+            raise forms.ValidationError({'Password':""""Password must be atleast 8 chracters long
+                                      one upper case character and one lower case character
+                                      and one digit atleast"""})
+        return cleaned_data
 class siginform(forms.ModelForm):
     class Meta:
         model=Register
@@ -54,7 +52,21 @@ class siginform(forms.ModelForm):
             'Email':"Enter your Registered Email",
             'Password':"Enter your Password"
         }
-        
+    def clean(self):
+        cleaned_data=super().clean()
+        email=cleaned_data.get('Email')
+        try:
+            print("In try block")
+            user1=Register.get(Email=email)
+            user1passcode=user1.Password
+            passcode=cleaned_data.get('Password')
+            if passcode!=user1passcode:
+                print("login page password")
+                raise ValidationError({'Password':"Password for the given mail is invalid"})
+        except:
+            raise forms.ValidationError({'Email':"The email is not registered"})
+
+
 
 
 
