@@ -2,16 +2,6 @@ body {
     font-family: sans-serif;
     margin: 0;
   }
-.message-list{
-  list-style: none;
-  margin: 0.5rem 0;
-  padding: 0;
-  color: #680000;
-}
-.message-list-error{
-  padding: 0;
-  color: #680000;
-}
 form {
   margin: 3rem auto;
   width: 90%;
@@ -64,7 +54,7 @@ button:active {
   margin-bottom: 0.5rem;
 }
 
-.errorslist {
+.errorlist {
   list-style: none;
   margin: 0.5rem 0;
   padding: 0;

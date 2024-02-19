@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from .models import Register
 def validate_password(password):
     pattern=r'^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$'
-    print('in the validate password  function')
     return bool(re.match(pattern,password))
 def validatephone(phonenumber):
     pattern = r'^\d{10}$'
@@ -37,13 +36,19 @@ class SignupForm(forms.ModelForm):
         if not validateEmail(email):
             raise forms.ValidationError({'Email':"The Email already exists"})
         if not validatephone(phone_number):
-            raise forms.ValidationError({'Phone_Number':"The Phone number must be 10 characters long and there must be no characters"})
+            raise forms.ValidationError({'Phone_number':"The Phone number must be 10 characters long and there must be no characters"})
         password=cleaned_data.get('Password')
         if not validate_password(password):
-            raise forms.ValidationError({'Password':""""Password must be atleast 8 chracters long
-                                      one upper case character and one lower case character
-                                      and one digit atleast"""})
+            raise forms.ValidationError({'Password':"Password must be atleast 8 chracters long one upper case character and one lower case character and one digit atleast"})
         return cleaned_data
+
+def checkforuser(email):
+    try:
+        user1=Register.objects.get(Email=email)
+        return True
+    except:
+        return False
+
 class siginform(forms.ModelForm):
     class Meta:
         model=Register
@@ -55,16 +60,18 @@ class siginform(forms.ModelForm):
     def clean(self):
         cleaned_data=super().clean()
         email=cleaned_data.get('Email')
-        try:
-            print("In try block")
-            user1=Register.get(Email=email)
+        if checkforuser(email):
+            user1=Register.objects.get(Email=email)
             user1passcode=user1.Password
             passcode=cleaned_data.get('Password')
-            if passcode!=user1passcode:
-                print("login page password")
-                raise ValidationError({'Password':"Password for the given mail is invalid"})
-        except:
+            if passcode==user1passcode:
+                pass
+            else:
+                raise forms.ValidationError({'Password':"Password for the given mail is invalid"})
+        else:
             raise forms.ValidationError({'Email':"The email is not registered"})
+        return cleaned_data
+    
 
 
 

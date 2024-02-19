@@ -15,12 +15,11 @@ class homePage(View):
     def post(self,request):
         form=SignupForm(request.POST)
         if form.is_valid():
-            print("The registration page is validated")
             form.save()
             return HttpResponseRedirect('login')
         else:
-            form=SignupForm()
-            print("The registrtaion page is invalid in the post view of signup page")
+            pass
+            
         return render(request,'Registrationpage/index.html',{
             'form':form
         })
@@ -32,13 +31,11 @@ class login(View):
             'form':form
         })
     def post(self,request):
-        print("In the post view")
         form = siginform(request.POST)
         if form.is_valid():
-            print("The login page is valid")
             return HttpResponse("<h1>Login is Success</h1>")
         else:
-            form = siginform()
+            pass
         return render(request,'Registrationpage/login.html',{
             'form':form
         })
