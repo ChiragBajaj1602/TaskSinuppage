@@ -14,6 +14,7 @@ def validatephone(phonenumber):
 def validateEmail(email):
     try:
         dbemail= Register.objects.get(Email=email)
+        return False
     except:
         return True
 class SignupForm(forms.ModelForm):
