@@ -57,7 +57,6 @@ class MyFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(combinedformset(self.request.POST), "1111111111111111111")
         if self.request.POST:
             context['formset'] = combinedformset(self.request.POST)
             
@@ -74,8 +73,6 @@ class MyFormView(FormView):
             formset.save()
             return super().form_valid(form)
         else:
-            print("the form is invalid")
             return self.render_to_response(self.get_context_data(form=form,formset=combinedformset))
-
 
 

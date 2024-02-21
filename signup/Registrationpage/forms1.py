@@ -5,12 +5,11 @@ import re
 from django.forms.models import inlineformset_factory
 def validateEmail(email):
     try:
-        dbemail= User.objects.get(Email=email)
+        dbemail= User.objects.filter(email=email)[0]
         return False
     except:
         return True
 def validate_password(password):
-    print(password, "2222222222222222222222222222")
     pattern=r'^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$'
     return bool(re.match(pattern,password))
 def validatephone(phonenumber):
@@ -50,6 +49,14 @@ class otherdetailform(forms.ModelForm):
             'Address':"Enter your Address",
             'state':"Enter name of your state",
         }
+    def clean(self):
+        cleaned_data=super().clean()
+        phone_number=cleaned_data.get('phone_number')
+        print(phone_number)
+        if not validatephone(phone_number):
+            raise forms.ValidationError({'phone_number':"There should 10 digits in the phone number"})
+        return cleaned_data
+
     
 
 
