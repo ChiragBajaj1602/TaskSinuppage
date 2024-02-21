@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.views import View
 from .forms import SignupForm,siginform
+from .forms1 import UserProfileForm
 from .models import Register
 from django.contrib import messages
 import re
+from django.views.generic.edit import FormView
 # Create your views here.
 class homePage(View):
     def get(self,request):
@@ -40,3 +42,10 @@ class login(View):
             'form':form
         })
 
+class signupapgeusingauth(FormView):
+    form_class=UserProfileForm
+    template_name='Registrationpage/index.html'
+    success_url='/login'
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
