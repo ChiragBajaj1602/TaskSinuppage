@@ -7,7 +7,7 @@ The Signup page
 <link rel="stylesheet" href="{% static 'Registrationpage/style.css' %}">
 {% endblock  %}
 {% block content %}
-<form action="/registrationpage" method="POST">
+<form action="/userformset" method="POST">
 {% csrf_token %}
 {% for field in form %}
     <div class="form-control {% if field.errors %}errors{% endif %} ">
@@ -16,6 +16,17 @@ The Signup page
         {{field.errors}}
     </div>
 {% endfor %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        <div class="form-control {% if form.errors %}errors{% endif %}">
+            {% for field in form.visible_fields %}
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
 <button>Submit button</button>
 </form>
 {% endblock %}

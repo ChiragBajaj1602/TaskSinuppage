@@ -14,6 +14,7 @@ def validatephone(phonenumber):
 def validateEmail(email):
     try:
         dbemail= Register.objects.get(Email=email)
+        return False
     except:
         return True
 class SignupForm(forms.ModelForm):
@@ -44,32 +45,32 @@ class SignupForm(forms.ModelForm):
 
 def checkforuser(email):
     try:
-        user1=Register.objects.get(Email=email)
+        user1=User.objects.get(Email=email)
         return True
     except:
         return False
 
 class siginform(forms.ModelForm):
     class Meta:
-        model=Register
-        fields=['Email','Password']
+        model=User
+        fields=['email','password']
         labels={
-            'Email':"Enter your Registered Email",
-            'Password':"Enter your Password"
+            'email':"Enter your Registered Email",
+            'password':"Enter your Password"
         }
     def clean(self):
         cleaned_data=super().clean()
-        email=cleaned_data.get('Email')
-        if checkforuser(email):
-            user1=Register.objects.get(Email=email)
+        email1=cleaned_data.get('email')
+        if checkforuser(email1):
+            user1=Register.objects.get(email=email1)
             user1passcode=user1.Password
-            passcode=cleaned_data.get('Password')
+            passcode=cleaned_data.get('password')
             if passcode==user1passcode:
                 pass
             else:
-                raise forms.ValidationError({'Password':"Password for the given mail is invalid"})
+                raise forms.ValidationError({'password':"Password for the given mail is invalid"})
         else:
-            raise forms.ValidationError({'Email':"The email is not registered"})
+            raise forms.ValidationError({'email':"The email is not registered"})
         return cleaned_data
     
 
